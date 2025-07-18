@@ -24,8 +24,6 @@
 
 <h2>Instructions</h2>
 
-<p>Continue with your previous Express API project or start with the solution of that exercise. You can download it below – Set up the project on your local machine by unzipping it and using <code>npm install</code> in the corresponding folder.</p>
-
 <p>Create a new database. You can use PlanetScale, or any other database provider. If you use PlanetScale, you might need to choose one of the following options:</p>
 
 <ul>
@@ -56,3 +54,35 @@
 </ul>
 
 <p>Make sure that the <code>seed</code> command is properly configured in <code>package.json</code> file. You can check out your file from the Bookstore code or check here below.</p>
+
+<h2>Database Seeding and Replacing Services</h2>
+
+<p>Run <code>npx prisma db seed</code> command to load the data into your database. Whenever you want to completely reset the database to the initial content (e.g. after you deleted or added many records via tests), you can run <code>npx prisma migrate reset</code>, which resets the database schema to the state of the latest migration and then executes the seed script.</p>
+
+<p>Replace the existing services where creation, read, update, and delete (CRUD) methods are used with <strong>Prisma Client</strong> built-in functions that will take care of inserting data into the database.</p>
+
+<p>Make sure to implement <code>async</code> and <code>await</code> in the route handlers when calling the services you changed in the previous step. Also, ensure that unexpected errors are reaching the error-handler middleware using <code>next(error)</code>.</p>
+
+<h2>Self Assessment</h2>
+
+<p>If you think you are done, make sure that your exercise meets these requirements:</p>
+
+<ul>
+  <li>Your app is connected to a database.</li>
+  <li>You have created a Prisma model based on the JSON files in the <code>/data</code> folder.</li>
+  <li>
+    The API meets the same data properties as the previous exercise, but keep in mind that you will have to create the following relationships:
+    <ul>
+      <li><strong>Event</strong></li>
+      <li><code>createdBy</code> - UUID (string) @Relationship with user (id)<br>
+        An event is always created by 1 user. A user can create 0 to many events.</li>
+      <li><code>categoryIds</code> - UUID (string) Many-to-many implicit @Relationship with category (id)<br>
+        An event can have 0 to many categories. A category can be assigned to 0 or many events.</li>
+    </ul>
+  </li>
+  <li>You have created a <code>seed.js</code> file to load the event data into your database.</li>
+  <li>You have implemented <code>async</code> and <code>await</code> in the route handlers where needed.</li>
+  <li>You replaced the creation, read, update, delete (CRUD) methods with <strong>Prisma Client</strong> built-in functions that take care of inserting data into the database.</li>
+</ul>
+
+
