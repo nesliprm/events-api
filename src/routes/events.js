@@ -8,15 +8,15 @@ import auth from "../middleware/auth.js";
 
 const router = Router();
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   const { title, location } = req.query;
-  const events = getEvents(title, location);
-  res.json(events);
+  const events = await getEvents(title, location);
+  res.status(200).json(events);
 });
 
-router.post("/", auth, (req, res) => {
+router.post("/", auth, async (req, res) => {
   const {
-    name,
+    title,
     description,
     location,
     image,
@@ -25,8 +25,8 @@ router.post("/", auth, (req, res) => {
     createdBy,
     categoryIds,
   } = req.body;
-  const newEvent = createEvent(
-    name,
+  const newEvent = await createEvent(
+    title,
     description,
     location,
     image,
@@ -38,37 +38,46 @@ router.post("/", auth, (req, res) => {
   res.status(201).json(newEvent);
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
-  const event = getEventById(id);
 
-  if (!event) {
-    res.status(404).json({ message: `Event with id ${id} not found` });
-  } else {
-    res.status(200).json(event);
+  try {
+    const event = await getEventById(id);
+
+    if (!event) {
+      res.status(404).json({ message: `Event with id ${id} not found` });
+    } else {
+      res.status(200).json(event);
+    }
+  } catch (error) {
+    next(error);
   }
 });
 
-router.delete("/:id", auth, (req, res) => {
+router.delete("/:id", auth, async (req, res, next) => {
   const { id } = req.params;
-  const event = deleteEventById(id);
+  try {
+    const event = await deleteEventById(id);
 
-  if (event) {
-    res.status(200).send({
-      message: `Event with id ${id} successfully deleted`,
-      event,
-    });
-  } else {
-    res.status(404).json({
-      message: `Event with id ${id} not found`,
-    });
+    if (event) {
+      res.status(200).send({
+        message: `Event with id ${id} successfully deleted`,
+        event,
+      });
+    } else {
+      res.status(404).json({
+        message: `Event with id ${id} not found`,
+      });
+    }
+  } catch (error) {
+    next(error);
   }
 });
 
-router.put("/:id", auth, (req, res) => {
+router.put("/:id", auth, async (req, res, next) => {
   const { id } = req.params;
   const {
-    name,
+    title,
     description,
     location,
     image,
@@ -77,26 +86,31 @@ router.put("/:id", auth, (req, res) => {
     createdBy,
     categoryIds,
   } = req.body;
-  const event = updateEventById(id, {
-    name,
-    description,
-    location,
-    image,
-    startTime,
-    endTime,
-    createdBy,
-    categoryIds,
-  });
 
-  if (event) {
-    res.status(200).send({
-      message: `Event with id ${id} successfully updated`,
-      event,
+  try {
+    const event = await updateEventById(id, {
+      title,
+      description,
+      location,
+      image,
+      startTime,
+      endTime,
+      createdBy,
+      categoryIds,
     });
-  } else {
-    res.status(404).json({
-      message: `Event with id ${id} not found`,
-    });
+
+    if (event) {
+      res.status(200).send({
+        message: `Event with id ${id} successfully updated`,
+        event,
+      });
+    } else {
+      res.status(404).json({
+        message: `Event with id ${id} not found`,
+      });
+    }
+  } catch (error) {
+    next(error);
   }
 });
 
