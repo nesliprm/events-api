@@ -2,12 +2,12 @@ import express from "express";
 import * as Sentry from "@sentry/node";
 import "dotenv/config";
 
-import usersRouter from "./routes/users.js";
-import eventsRouter from "./routes/events.js";
-import categoriesRouter from "./routes/categories.js";
-import loginRouter from "./routes/login.js";
-import log from "./middleware/logMiddleware.js";
-import errorHandler from "./middleware/errorHandler.js";
+import usersRouter from "./src/routes/users.js";
+import eventsRouter from "./src/routes/events.js";
+import categoriesRouter from "./src/routes/categories.js";
+import loginRouter from "./src/routes/login.js";
+import log from "./src/middleware/logMiddleware.js";
+import errorHandler from "./src/middleware/errorHandler.js";
 
 const app = express();
 

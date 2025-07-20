@@ -1,27 +1,32 @@
 {
-  "name": "express-events",
+  "name": "events-api",
   "version": "1.0.0",
+  "main": "index.js",
   "type": "module",
-  "description": "Your first ever REST API for managing events",
-  "main": "src/index.js",
+  "prisma": {
+    "seed": "node ./prisma/seed.js"
+  },
   "scripts": {
-    "dev": "nodemon src/index.js",
+    "dev": "nodemon index.js",
     "test-positive": "newman run \"../postman/collections/Events API.json\" -e \"../postman/environments/Local.postman_environment.json\"",
     "test-negative": "newman run \"../postman/collections/Events API Negative.json\" -e \"../postman/environments/Local.postman_environment.json\"",
     "test": "npm run test-positive && npm run test-negative"
   },
-  "author": "",
+  "author": "nesli p",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^6.12.0",
     "@sentry/node": "^7.64.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.1",
+    "prisma": "^6.12.0",
     "uuid": "^9.0.0",
     "winston": "^3.10.0"
   },
   "devDependencies": {
     "newman": "^6.2.1",
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "prisma": "^6.12.0"
   }
 }
