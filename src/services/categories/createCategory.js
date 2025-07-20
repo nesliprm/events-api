@@ -1,15 +1,11 @@
-import { v4 as uuidv4 } from "uuid";
-import categoryData from "../../data/categories.json" assert { type: "json" };
+import { PrismaClient } from "@prisma/client";
 
-const createCategory = (name) => {
-  const newCategory = {
-    id: uuidv4(),
-    name,
-  };
+const createCategory = async (name) => {
+  const prisma = new PrismaClient();
 
-  categoryData.categories.push(newCategory);
-
-  return newCategory;
+  return prisma.category.create({
+    data: { name },
+  });
 };
 
 export default createCategory;

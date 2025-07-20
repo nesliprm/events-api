@@ -5,62 +5,77 @@ import getCategoryById from "../services/categories/getCategoryById.js";
 import deleteCategoryById from "../services/categories/deleteCategoryById.js";
 import updateCategoryById from "../services/categories/updateCategoryById.js";
 import auth from "../middleware/auth.js";
+import { error } from "winston";
 
 const router = Router();
 
-router.get("/", (req, res) => {
-  const categories = getCategories();
-  res.json(categories);
+router.get("/", async (req, res) => {
+  const categories = await getCategories();
+  res.status(200).json(categories);
 });
 
-router.post("/", auth, (req, res) => {
+router.post("/", auth, async (req, res) => {
   const { name } = req.body;
-  const newCategory = createCategory(name);
-
+  const newCategory = await createCategory(name);
   res.status(201).json(newCategory);
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
-  const category = getCategoryById(id);
 
-  if (!category) {
-    res.status(404).json({ message: `Category with id ${id} not found` });
-  } else {
-    res.status(200).json(category);
+  try {
+    const category = await getCategoryById(id);
+
+    if (!category) {
+      res.status(404).json({ message: `Category with id ${id} not found` });
+    } else {
+      res.status(200).json(category);
+    }
+  } catch (error) {
+    next(error);
   }
 });
 
-router.delete("/:id", auth, (req, res) => {
+router.delete("/:id", auth, async (req, res, next) => {
   const { id } = req.params;
-  const category = deleteCategoryById(id);
 
-  if (category) {
-    res.status(200).send({
-      message: `Category with id ${id} successfully deleted`,
-      category,
-    });
-  } else {
-    res.status(404).json({
-      message: `Category with id ${id} not found`,
-    });
+  try {
+    const category = await deleteCategoryById(id);
+
+    if (category) {
+      res.status(200).send({
+        message: `Category with id ${id} successfully deleted`,
+        category,
+      });
+    } else {
+      res.status(404).json({
+        message: `Category with id ${id} not found`,
+      });
+    }
+  } catch (error) {
+    next(error);
   }
 });
 
-router.put("/:id", auth, (req, res) => {
+router.put("/:id", auth, async (req, res, next) => {
   const { id } = req.params;
   const { name } = req.body;
-  const category = updateCategoryById(id, { name });
 
-  if (category) {
-    res.status(200).send({
-      message: `Category with id ${id} successfully updated`,
-      category,
-    });
-  } else {
-    res.status(404).json({
-      message: `Category with id ${id} not found`,
-    });
+  try {
+    const category = await updateCategoryById(id, { name });
+
+    if (category) {
+      res.status(200).send({
+        message: `Category with id ${id} successfully updated`,
+        category,
+      });
+    } else {
+      res.status(404).json({
+        message: `Category with id ${id} not found`,
+      });
+    }
+  } catch (error) {
+    next(error);
   }
 });
 

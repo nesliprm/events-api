@@ -1,22 +1,12 @@
-import categoriesData from "../../data/categories.json" assert { type: "json" };
+import { PrismaClient } from "@prisma/client";
 
-const updateCategoryById = (id, updatedCategory) => {
-  const categoryIndex = categoriesData.categories.findIndex(
-    (category) => category.id === id
-  );
+const updateCategoryById = async (id, updatedCategory) => {
+  const prisma = new PrismaClient();
 
-  if (categoryIndex === -1) {
-    return null;
-  }
-
-  const { name } = updatedCategory;
-
-  categoriesData.categories[categoryIndex] = {
-    ...categoriesData.categories[categoryIndex],
-    name: name || categoriesData.categories[categoryIndex].name,
-  };
-
-  return categoriesData.categories[categoryIndex];
+  return prisma.category.update({
+    where: { id },
+    data: { ...updatedCategory },
+  });
 };
 
 export default updateCategoryById;
