@@ -5,7 +5,8 @@ import getCategoryById from "../services/categories/getCategoryById.js";
 import deleteCategoryById from "../services/categories/deleteCategoryById.js";
 import updateCategoryById from "../services/categories/updateCategoryById.js";
 import auth from "../middleware/auth.js";
-import { error } from "winston";
+import winston from "winston";
+const { error } = winston;
 
 const router = Router();
 
