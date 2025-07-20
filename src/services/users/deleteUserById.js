@@ -1,15 +1,9 @@
-import userData from "../../data/users.json" assert { type: "json" };
+import { PrismaClient } from "@prisma/client";
 
-const deleteUserById = (id) => {
-  const userIndex = userData.users.findIndex((user) => user.id === id);
+const deleteUserById = async (id) => {
+  const prisma = new PrismaClient();
 
-  if (userIndex === -1) {
-    return null;
-  }
-
-  const deletedUser = userData.users.splice(userIndex, 1);
-
-  return deletedUser;
+  return prisma.user.delete({ where: { id } });
 };
 
 export default deleteUserById;
